@@ -1,0 +1,33 @@
+Properties signProp = new Properties()
+try {
+    signProp.load(rootProject.file('signForTest.properties').newDataInputStream())
+
+    project.ext {
+        forTest = new Object() {
+            def storeFile = signProp.get("forTest.storeFile")
+            def storePassword = signProp.get("forTest.storePassword")
+            def keyAlias = signProp.get("forTest.keyAlias")
+            def keyPassword = signProp.get("forTest.keyPassword")
+        }
+    }
+} catch (IOException e) {
+    project.ext {
+        forTest = new Object() {
+            def storeFile = '/Users/yurich/.android/keystore.jks'
+            def storePassword = 'ilovelp93'
+            def keyAlias = 'debugKeyStore'
+            def keyPassword = 'ilovelp93'
+        }
+    }
+}
+
+android {
+    signingConfigs {
+        forTest {
+            storeFile file(project.ext.forTest.storeFile)
+            storePassword project.ext.forTest.storePassword
+            keyAlias project.ext.forTest.keyAlias
+            keyPassword project.ext.forTest.keyPassword
+        }
+    }
+}
